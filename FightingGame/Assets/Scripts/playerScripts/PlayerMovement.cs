@@ -8,18 +8,21 @@ public class PlayerMovement : MonoBehaviour
     [Header("Player Movement")]
     [SerializeField] private float _movementSpeed = 3;
 
-    private PlayerInputController _inputController;
-    private Rigidbody _thisRigidbody;
 
     [Header("Player Rotation")]
     [SerializeField] float _rotationSpeed;
     [SerializeField] int _amountOfPoints = 12;
     [SerializeField] float _laserSize = 5;
+    
+    private PlayerInputController _inputController;
+    private PlayerCamera _playerCamrea;
+    private Rigidbody _thisRigidbody;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _inputController = GetComponent<PlayerInputController>();
+        _playerCamrea = GetComponent<PlayerCamera>();
         _thisRigidbody = GetComponent<Rigidbody>();
     }
 
@@ -34,13 +37,13 @@ public class PlayerMovement : MonoBehaviour
     void movementInput()
     {
         Vector3 inputVelocty = new Vector3(_inputController.moveValue.x, 0, _inputController.moveValue.y);
-        _thisRigidbody.linearVelocity = inputVelocty * _movementSpeed;   
+
     }
 
     void rotationInput()
     {
         Vector3 inputValue = new Vector3(_inputController.lookValue.x, 0, _inputController.lookValue.y);
-        
+        _thisRigidbody.position += ((_playerCamrea.forwadLookRotation()) * (_inputController.moveValue.y * _movementSpeed)) * Time.fixedDeltaTime;
     }
 
     void debugDrawRoatation(int _amountOfPoint, Vector3 playerPos, float laserSize)
